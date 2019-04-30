@@ -38,6 +38,12 @@ $(document).ready(function () {
             $(".list-item:last").css("background-color", taskColor);
             $(".list-item:last").append(task.data);
 
+            if (task.done) {
+                $(".list-item:last").addClass("done");
+            } else {
+                $(".list-item:last").addClass("undone");
+            }
+
             // Filter
             if (task.done && state.filter == 'todo' || !task.done && state.filter == 'done') {
                 $(".list-item:last").hide();
@@ -75,7 +81,7 @@ $(document).ready(function () {
             'for': 'cb' + id,
             class: 'list-item',
             color: color,
-        }).appendTo(container);
+        }).appendTo(container)
 
         $('<input />', {
             type: 'checkbox',
@@ -85,6 +91,7 @@ $(document).ready(function () {
 
         $(".list-item:last").append(task);
         $(".list-item:last").css("background-color", color);
+        $(".list-item:last").addClass("undone");
 
         if (state.filter == 'done') {
             $(".list-item:last").hide();
@@ -108,47 +115,26 @@ $(document).ready(function () {
 
         localStorage.setItem('state', JSON.stringify(state));
 
-        $(".list-item").each(function () {
-            let id = $(this).attr('for').slice(2);
-            if (state.tasks.find(x => x.id == id).done) {
-                switch (filterVal) {
-                    case 'all':
-                        {
-                            $(this).show('slow');
-                            break;
-                        }
-                    case 'done':
-                        {
-                            $(this).show('slow');
-                            break;
-                        }
-                    case 'todo':
-                        {
-                            $(this).hide('slow');
-                            break;
-                        }
+        switch (filterVal) {
+            case 'all':
+                {
+                    $(".done").show('slow');
+                    $(".undone").show('slow');
+                    break;
                 }
-            } else {
-                switch (filterVal) {
-                    case 'all':
-                        {
-                            $(this).show('slow');
-                            break;
-                        }
-                    case 'done':
-                        {
-                            $(this).hide('slow');
-                            break;
-                        }
-                    case 'todo':
-                        {
-                            $(this).show('slow');
-                            break;
-                        }
+            case 'done':
+                {
+                    $(".done").show('slow');
+                    $(".undone").hide('slow');
+                    break;
                 }
-            }
-        });
-
+            case 'todo':
+                {
+                    $(".done").hide('slow');
+                    $(".undone").show('slow');
+                    break;
+                }
+        }
     });
 });
 
@@ -160,10 +146,12 @@ $(document).on('change', 'input:checkbox', function () {
     if ($(this).prop('checked')) {
         taskColor = doneColor;
         doneStatus = true;
+        listElem.removeClass('undone').addClass('done');
         if (state.filter == 'todo') {
             listElem.hide('slow');
         }
     } else {
+        listElem.removeClass('done').addClass('undone');
         if (state.filter == 'done') {
             listElem.hide('slow');
         }
