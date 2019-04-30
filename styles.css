@@ -14,7 +14,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 500px;
+    width: 550px;
     margin: 5px;
     padding: 7px;
     border-radius: 4px;
@@ -56,7 +56,7 @@ body{
     text-align: center;
     font-size: 14px;
     border-radius: 4px;
-    margin-left: auto;
+    margin-right: 5px;
 }
 
 .cb-list{
@@ -70,7 +70,7 @@ body{
 .cb-list .list-item{
     display: flex;
     align-items: center;
-    width: 500px;
+    width: 550px;
     font-size: 17px;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -78,7 +78,7 @@ body{
     padding-right: 7px;
     margin-top: 1px;
     color: #fff;
-    background-color: #a0a0a0;
+    background-color: #ff7583;
     border-radius: 4px;
 }
 
@@ -93,6 +93,17 @@ body{
 
 .message{
     font-size: 15px;
-    width: 500px;
+    width: 550px;
+}
+
+.filter{
+    background-color:#73bcb1;
+    border: none;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 4px;
+    outline: none;
 }
 
