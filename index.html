@@ -29,9 +29,18 @@
                 <option value="all">All tasks</option>
                 <option value="done">Finished tasks</option>
                 <option value="todo">Unfinished tasks</option>
-              </select>
+            </select>
         </div>
         <div class="message"></div>
+        <div class="popup-overlay">
+            <div class="popup-content">
+                <input id="editText">
+                <div class="button-wrapper">
+                    <button id="saveBtn">Save</button>
+                    <button id="cancelBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>

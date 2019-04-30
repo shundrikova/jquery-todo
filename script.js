@@ -36,7 +36,17 @@ $(document).ready(function () {
             let taskColor = (task.done) ? doneColor : task.color;
 
             $(".list-item:last").css("background-color", taskColor);
-            $(".list-item:last").append(task.data);
+
+            $('<span />', {
+                text: task.data
+            }).appendTo(".list-item:last");
+
+            $('<input />', {
+                type: 'button',
+                id: task.id,
+                class: 'button-item',
+                value: 'Edit'
+            }).appendTo(".list-item:last");
 
             if (task.done) {
                 $(".list-item:last").addClass("done");
@@ -89,7 +99,20 @@ $(document).ready(function () {
             id: 'cb' + id
         }).hide().appendTo(".list-item:last").show('slow');
 
-        $(".list-item:last").append(task);
+        $('<span />', {
+            text: task
+        }).appendTo(".list-item:last");
+
+        //$(".list-item:last").append(task);
+
+        $('<input />', {
+            type: 'button',
+            id: id,
+            class: 'button-item',
+            value: 'Edit'
+        }).appendTo(".list-item:last");
+
+
         $(".list-item:last").css("background-color", color);
         $(".list-item:last").addClass("undone");
 
@@ -139,7 +162,8 @@ $(document).ready(function () {
 });
 
 $(document).on('change', 'input:checkbox', function () {
-    let listElem = $("label[for='" + $(this).attr('id') + "']");
+    let id = $(this).attr('id')
+    let listElem = $(`label[for='${id}']`);
     let taskColor = listElem.attr('color');
     let doneStatus = false;
 
@@ -163,4 +187,31 @@ $(document).on('change', 'input:checkbox', function () {
     listElem.css("background-color", taskColor);
     // Update local storage
     localStorage.setItem('state', JSON.stringify(state));
+});
+
+// Edit
+$(document).on('click', '.button-item', function () {
+    let textValue = $(this).parent().text();
+    $("#editText").val(textValue);
+    $(".popup-overlay").attr('label-id', $(this).parent().attr('for'));
+    $(".popup-overlay, .popup-content").addClass("active");
+});
+
+//Cancel
+$(document).on('click', '#cancelBtn', function () {
+    $(".popup-overlay, .popup-content").removeClass("active");
+});
+
+//Save
+$(document).on('click', '#saveBtn', function () {
+    let labelId = $(".popup-overlay").attr('label-id');
+    let listElem = $(`label[for='${labelId}']`);
+    let newText = $("#editText").val();
+
+    listElem.find("span").text(newText);
+
+    state.tasks.find(x => x.id == labelId.slice(2)).data = $("#editText").val();
+    localStorage.setItem('state', JSON.stringify(state));
+
+    $(".popup-overlay, .popup-content").removeClass("active");
 });
