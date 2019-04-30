@@ -31,7 +31,7 @@ $(document).ready(function () {
                 class: 'cb-item',
                 id: 'cb' + task.id,
                 checked: task.done,
-            }).appendTo(".list-item:last");
+            }).hide().appendTo(".list-item:last").show('slow');
 
             let taskColor = (task.done) ? doneColor : task.color;
 
@@ -81,7 +81,7 @@ $(document).ready(function () {
             'for': 'cb' + id,
             class: 'list-item',
             color: color,
-        }).appendTo(container)
+        }).appendTo(container);
 
         $('<input />', {
             type: 'checkbox',
