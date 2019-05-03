@@ -1,4 +1,4 @@
-const doneColor = "#a0a0a0";
+const doneColor = '#a0a0a0';
 let state = {};
 let color;
 
@@ -8,7 +8,7 @@ $(document).ready(function () {
     function loadStorage() {
         state = JSON.parse(localStorage.getItem('state'));
 
-        if (state == null) {
+        if (state === null) {
             state = {
                 filter: 'all',
                 tasks: []
@@ -16,47 +16,30 @@ $(document).ready(function () {
             return state;
         }
 
-        $(".filter").val(state.filter);
+        $('.filter').val(state.filter);
 
         // Add tasks to html
         state.tasks.forEach(function (task) {
-            $('<label />', {
-                'for': 'cb' + task.id,
-                class: 'list-item',
-                color: task.color,
-            }).appendTo('.cb-list');
+            $(`<label for=${task.id} class='task' color='${task.color}' </label>`).appendTo('.task-list');
+            
+            let listElem = $('.task:last');
 
-            $('<input />', {
-                type: 'checkbox',
-                class: 'cb-item',
-                id: 'cb' + task.id,
-                checked: task.done,
-            }).hide().appendTo(".list-item:last").show('slow');
+            let checked = (task.done) ? 'checked': '';
+            $(`<input type='checkbox' class='task-cb' id=${task.id} ${checked}>`).hide().appendTo(listElem).show('slow');
+
+            $(`<span>${task.data}</span>`).appendTo(listElem);
+
+            $(`<input type='button' class='edit-btn' id=${task.id} value='Edit'>`).appendTo(listElem);
+
+            let taskClass = (task.done) ? 'done' : 'undone';
+            listElem.addClass(taskClass);
 
             let taskColor = (task.done) ? doneColor : task.color;
-
-            $(".list-item:last").css("background-color", taskColor);
-
-            $('<span />', {
-                text: task.data
-            }).appendTo(".list-item:last");
-
-            $('<input />', {
-                type: 'button',
-                id: task.id,
-                class: 'button-item',
-                value: 'Edit'
-            }).appendTo(".list-item:last");
-
-            if (task.done) {
-                $(".list-item:last").addClass("done");
-            } else {
-                $(".list-item:last").addClass("undone");
-            }
+            listElem.css('background-color', taskColor);
 
             // Filter
-            if (task.done && state.filter == 'todo' || !task.done && state.filter == 'done') {
-                $(".list-item:last").hide();
+            if (task.done && state.filter === 'todo' || !task.done && state.filter === 'done') {
+                listElem.hide();
             }
         });
 
@@ -65,59 +48,44 @@ $(document).ready(function () {
 
     state = loadStorage();
 
-    $(".color-box").on('click', function () {
-        color = $(this).css("background-color");
+    $('.color-box').on('click', function () {
+        color = $(this).css('background-color');
     });
 
-    $("#addBtn").on('click', function () {
-        let task = $("#itemText").val();
+    $('#add-btn').on('click', function () {
+        let task = $('#new-task').val();
 
         // Check if empty input
-        if (task == "") {
-            $(".message").text("Empty input!");
-            $(".message").css("display", "inline");
-            $(".message").delay(3000).fadeOut("slow");
+        if (task === '') {
+            $('.message').text('Empty input!');
+            $('.message').css('display', 'inline');
+            $('.message').delay(3000).fadeOut('slow');
             return;
         }
 
-        $("#itemText").val('');
+        $('#new-task').val('');
 
-        let container = $('.cb-list');
+        let container = $('.task-list');
         let inputs = container.find('label');
         let id = inputs.length + 1;
 
         // Add task to html
-        $('<label />', {
-            'for': 'cb' + id,
-            class: 'list-item',
-            color: color,
-        }).appendTo(container);
+        $(`<label for=${id} class='task' color='${color}' </label>`).appendTo(container);
 
-        $('<input />', {
-            type: 'checkbox',
-            class: 'cb-item',
-            id: 'cb' + id
-        }).hide().appendTo(".list-item:last").show('slow');
+        let listElem = $('.task:last');
 
-        $('<span />', {
-            text: task
-        }).appendTo(".list-item:last");
+        $(`<input type='checkbox' class='task-cb' id=${id}>`).hide().appendTo(listElem).show('slow');
 
-        //$(".list-item:last").append(task);
+        $(`<span>${task}</span>`).appendTo(listElem);
 
-        $('<input />', {
-            type: 'button',
-            id: id,
-            class: 'button-item',
-            value: 'Edit'
-        }).appendTo(".list-item:last");
+        $(`<input type='button' class='edit-btn' id=${id} value='Edit'>`).appendTo(listElem);
 
 
-        $(".list-item:last").css("background-color", color);
-        $(".list-item:last").addClass("undone");
-
-        if (state.filter == 'done') {
-            $(".list-item:last").hide();
+        listElem.css('background-color', color);
+        
+        listElem.addClass('undone');
+        if (state.filter === 'done') {
+            listElem.hide();
         }
 
         // Add task to state structure
@@ -132,31 +100,28 @@ $(document).ready(function () {
         localStorage.setItem('state', JSON.stringify(state));
     });
 
-    $(".filter").on('change', function () {
+    $('.filter').on('change', function () {
         let filterVal = $(this).val()
         state.filter = filterVal;
 
         localStorage.setItem('state', JSON.stringify(state));
 
         switch (filterVal) {
-            case 'all':
-                {
-                    $(".done").show('slow');
-                    $(".undone").show('slow');
-                    break;
-                }
-            case 'done':
-                {
-                    $(".done").show('slow');
-                    $(".undone").hide('slow');
-                    break;
-                }
-            case 'todo':
-                {
-                    $(".done").hide('slow');
-                    $(".undone").show('slow');
-                    break;
-                }
+            case 'all': {
+                $('.done').show('slow');
+                $('.undone').show('slow');
+                break;
+            }
+            case 'done': {
+                $('.done').show('slow');
+                $('.undone').hide('slow');
+                break;
+            }
+            case 'todo': {
+                $('.done').hide('slow');
+                $('.undone').show('slow');
+                break;
+            }
         }
     });
 });
@@ -170,48 +135,50 @@ $(document).on('change', 'input:checkbox', function () {
     if ($(this).prop('checked')) {
         taskColor = doneColor;
         doneStatus = true;
+
         listElem.removeClass('undone').addClass('done');
-        if (state.filter == 'todo') {
+        if (state.filter === 'todo') {
             listElem.hide('slow');
         }
     } else {
         listElem.removeClass('done').addClass('undone');
-        if (state.filter == 'done') {
+        if (state.filter === 'done') {
             listElem.hide('slow');
         }
     }
 
-    // Update task done status
-    state.tasks.find(x => x.id == $(this).attr('id').slice(2)).done = doneStatus;
+    listElem.css('background-color', taskColor);
 
-    listElem.css("background-color", taskColor);
+    // Update task done status
+    state.tasks.find(x => x.id == $(this).attr('id')).done = doneStatus;
     // Update local storage
     localStorage.setItem('state', JSON.stringify(state));
 });
 
 // Edit
-$(document).on('click', '.button-item', function () {
-    let textValue = $(this).parent().text();
-    $("#editText").val(textValue);
-    $(".popup-overlay").attr('label-id', $(this).parent().attr('for'));
-    $(".popup-overlay, .popup-content").addClass("active");
+$(document).on('click', '.edit-btn', function () {
+    let taskDesc = $(this).parent().text();
+    $('#edit-box').val(taskDesc);
+    $('.popup-overlay').attr('label-id', $(this).parent().attr('for'));
+    $('.popup-overlay, .popup-content').addClass('active');
 });
 
 //Cancel
-$(document).on('click', '#cancelBtn', function () {
-    $(".popup-overlay, .popup-content").removeClass("active");
+$(document).on('click', '#cancel-btn', function () {
+    $('.popup-overlay, .popup-content').removeClass('active');
 });
 
 //Save
-$(document).on('click', '#saveBtn', function () {
-    let labelId = $(".popup-overlay").attr('label-id');
+$(document).on('click', '#save-btn', function () {
+    let labelId = $('.popup-overlay').attr('label-id');
     let listElem = $(`label[for='${labelId}']`);
-    let newText = $("#editText").val();
+    let newDesc = $('#edit-box').val();
 
-    listElem.find("span").text(newText);
+    listElem.find('span').text(newDesc);
 
-    state.tasks.find(x => x.id == labelId.slice(2)).data = $("#editText").val();
+    state.tasks.find(x => x.id == labelId).data = newDesc;
+
     localStorage.setItem('state', JSON.stringify(state));
 
-    $(".popup-overlay, .popup-content").removeClass("active");
+    $('.popup-overlay, .popup-content').removeClass('active');
 });
